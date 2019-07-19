@@ -17,7 +17,8 @@ import {
   filterEvents,
   findEvent,
   appendEvent,
-  regenerateEventIds
+  regenerateEventIds,
+  addEvent
 } from "../../lib/helpers/eventSystem";
 import * as actions from "../../actions";
 import { DropdownButton } from "../library/Button";
@@ -58,6 +59,7 @@ const cardTarget = {
     return monitor.isOver({ shallow: true });
   },
   drop(props) {
+    console.log("DROP", props);
     return {
       id: props.id,
       end: props.end
@@ -168,6 +170,7 @@ class ActionMini extends Component {
   render() {
     const {
       id,
+      parentId,
       type,
       action,
       connectDragSource,
@@ -184,20 +187,24 @@ class ActionMini extends Component {
       onMouseEnter,
       onMouseLeave
     } = this.props;
+    // console.log("PROPS", this.props);
     const { rename, clipboardEvent } = this.state;
     const { command } = action;
 
     if (command === EVENT_END) {
-      return connectDropTarget(
-        <div
-          className={cx("ActionMini", "ActionMini--Add", {
-            "ActionMini--Dragging": isDragging,
-            "ActionMini--Over": isOverCurrent
-          })}
-        >
-          <AddCommandButton onAdd={onAdd(id)} type={type} />
-        </div>
-      );
+      return <div />;
+      // console.log("ON ADD", this.props);
+      // return connectDropTarget(
+      //   <div
+      //     className={cx("ActionMini", "ActionMini--Add", {
+      //       "ActionMini--Dragging": isDragging,
+      //       "ActionMini--Over": isOverCurrent
+      //     })}
+      //   >
+      //     [{parentId}]
+      //     <AddCommandButton onAdd={onAdd(id)} type={type} />
+      //   </div>
+      // );
     }
 
     const open = action.args && !action.args.__collapse;
@@ -217,7 +224,7 @@ class ActionMini extends Component {
           className={cx("ActionMini", {
             "ActionMini--Dragging": isDragging,
             "ActionMini--Over": isOverCurrent,
-            "ActionMini--Conditional": childKeys.length > 0,
+            "ActionMini--Conditional": !!action.children,
             "ActionMini--Commented": commented
           })}
         >
@@ -251,7 +258,6 @@ class ActionMini extends Component {
                 )}
               </div>
             )}
-
             <div className="ActionMini__Dropdown">
               <DropdownButton
                 small
@@ -295,7 +301,6 @@ class ActionMini extends Component {
                 </MenuItem>
               </DropdownButton>
             </div>
-
             {rename && (
               <div className="ActionMini__Rename">
                 <FormField>
@@ -315,7 +320,6 @@ class ActionMini extends Component {
                 </FormField>
               </div>
             )}
-
             {open && events[command] && events[command].fields && (
               <ScriptEventBlock
                 id={action.id}
@@ -324,17 +328,11 @@ class ActionMini extends Component {
                 onChange={this.onEdit}
                 renderEvents={key => (
                   <div className="ActionMini__Children">
-                    {(
-                      action.children[key] || [
-                        {
-                          id: uuid(),
-                          command: EVENT_END
-                        }
-                      ]
-                    ).map(childAction => (
+                    {(action.children[key] || []).map(childAction => (
                       <ActionMiniDnD
                         key={childAction.id}
                         id={childAction.id}
+                        parentId={action.id}
                         type={type}
                         path={`${id}_true_${childAction.id}`}
                         action={childAction}
@@ -349,6 +347,21 @@ class ActionMini extends Component {
                         clipboardEvent={clipboardEvent}
                       />
                     ))}
+
+                    {connectDropTarget(
+                      <div
+                        className={cx("ActionMini", "ActionMini--Add", {
+                          "ActionMini--Dragging": isDragging,
+                          "ActionMini--Over": isOverCurrent
+                        })}
+                      >
+                        <AddCommandButton
+                          onAdd={onAdd(action.id, key)}
+                          type={type}
+                        />
+                      </div>
+                    )}
+
                     <div
                       className="ActionMini__ChildrenBorder"
                       title={eventName}
@@ -357,7 +370,6 @@ class ActionMini extends Component {
                 )}
               />
             )}
-
             {/* {open &&
               childKeys.length > 0 &&
               connectDropTarget(
@@ -386,7 +398,6 @@ class ActionMini extends Component {
                   />
                 </div>
               )} */}
-
             {/* {childKeys.length > 1 &&
               childKeys.map((key, index) => {
                 if (index === 0) {
@@ -505,7 +516,8 @@ class ScriptEditor extends Component {
     this.onChange(input);
   };
 
-  onAdd = id => (command, defaults = {}) => {
+  onAdd = (id, childKey) => (command, defaults = {}) => {
+    console.log("ON ADD", id, command, defaults);
     const {
       variableIds,
       musicIds,
@@ -566,9 +578,13 @@ class ScriptEditor extends Component {
       };
     }, {});
 
-    const input = prependEvent(
+    // debugger;
+    console.log({ root, id, childKey });
+
+    const input = addEvent(
       root,
       id,
+      childKey,
       Object.assign(
         {
           id: uuid(),
@@ -576,10 +592,14 @@ class ScriptEditor extends Component {
           args: defaultArgs
         },
         childFields.length > 0 && {
-          children
+          children: {}
         }
       )
     );
+
+    console.log({ input });
+    // debugger;
+
     this.onChange(input);
   };
 
@@ -745,6 +765,10 @@ class ScriptEditor extends Component {
             />
           ))}
 
+          <div className={cx("ActionMini", "ActionMini--Add", {})}>
+            <AddCommandButton onAdd={this.onAdd()} type={type} />
+          </div>
+
           <pre>{JSON.stringify(value, null, 2)}</pre>
         </div>
       </div>
@@ -769,10 +793,10 @@ ScriptEditor.propTypes = {
 
 ScriptEditor.defaultProps = {
   value: [
-    {
-      id: uuid(),
-      command: EVENT_END
-    }
+    // {
+    //   id: uuid(),
+    //   command: EVENT_END
+    // }
   ]
 };
 

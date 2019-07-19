@@ -87,9 +87,14 @@ const compile = async (
     const subScripts = {};
     const bankEntitySubScripts = entityType => (entity, entityIndex) => {
       walkEventsDepthFirst(entity.script, cmd => {
-        if (cmd.command === EVENT_SET_INPUT_SCRIPT) {
+        if (
+          cmd.command === EVENT_SET_INPUT_SCRIPT &&
+          cmd.children &&
+          cmd.children.true
+        ) {
+          console.log("cmd.true", cmd.children.true);
           subScripts[cmd.id] = banked.push(
-            compileEntityEvents(cmd.true, {
+            compileEntityEvents(cmd.children.true, {
               scene,
               sceneIndex,
               scenes: precompiled.sceneData,

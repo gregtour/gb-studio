@@ -1,4 +1,46 @@
-import { walkEvents, patchEvents } from "../../src/lib/helpers/eventSystem";
+import {
+  walkEvents,
+  patchEvents,
+  addEvent
+} from "../../src/lib/helpers/eventSystem";
+
+test("should add events to root", () => {
+  const events = [];
+  const newEvents = addEvent(events, null, null, { id: 1 });
+  expect(newEvents.length).toBe(1);
+  expect(newEvents[0].id).toBe(1);
+});
+
+test("should add events to children", () => {
+  const events = [
+    {
+      id: 1,
+      children: {
+        true: []
+      }
+    }
+  ];
+  const newEvents = addEvent(events, 1, "true", { id: 2 });
+  expect(newEvents.length).toBe(1);
+  expect(newEvents[0].id).toBe(1);
+  expect(newEvents[0].children.true.length).toBe(1);
+  expect(newEvents[0].children.true[0].id).toBe(2);
+});
+
+test("should not add events to children not matching key", () => {
+  const events = [
+    {
+      id: 1,
+      children: {
+        true: [],
+        false: []
+      }
+    }
+  ];
+  const newEvents = addEvent(events, 1, "true", { id: 2 });
+  console.log(JSON.stringify(newEvents, null, 4));
+  expect(newEvents[0].children.false.length).toBe(0);
+});
 
 test("shouldn't walk empty events", () => {
   const events = [];

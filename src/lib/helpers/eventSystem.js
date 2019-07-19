@@ -219,6 +219,39 @@ const appendEvent = (data, id, newData) => {
   }, []);
 };
 
+const addEvent = (data, id, childKey, newData) => {
+  if (!id && !childKey) {
+    return [].concat(data, newData);
+  }
+  return data.reduce((memo, o) => {
+    // const nextId = o.id === id ? null : id;
+    return [].concat(
+      memo,
+      Object.assign(
+        {},
+        o,
+        (o.children || o.id === id) && {
+          children: Object.assign(
+            {},
+            mapValues(o.children || [], (childEvents, key) => {
+              // const nextChildKey = key === childKey ? null : childKey;
+              return addEvent(childEvents, id, childKey, newData);
+            }),
+            o.id === id && {
+              [childKey]: addEvent(
+                (o.children && o.children[childKey]) || [],
+                null,
+                null,
+                newData
+              )
+            }
+          )
+        }
+      )
+    );
+  }, []);
+};
+
 const removeEventIds = event => {
   return Object.assign(
     {},
@@ -305,5 +338,6 @@ export {
   removeEventIds,
   filterEvents,
   findEvent,
-  eventHasArg
+  eventHasArg,
+  addEvent
 };

@@ -70,7 +70,7 @@ class Sidebar extends Component {
       <div
         className={cx("Sidebar", {
           "Sidebar--Open": true,
-          "Sidebar--TwoColumn": width >= 500
+          "Sidebar--TwoColumn": false
         })}
         onMouseDown={onMouseDown}
       >

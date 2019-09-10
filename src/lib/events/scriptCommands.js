@@ -82,6 +82,10 @@ export const TEXT_MULTI = "TEXT_MULTI";
 export const ACTOR_SET_FRAME_TO_VALUE = "ACTOR_SET_FRAME_TO_VALUE";
 export const VARIABLE_ADD_FLAGS = "VARIABLE_ADD_FLAGS";
 export const VARIABLE_CLEAR_FLAGS = "VARIABLE_CLEAR_FLAGS";
+export const SOUND_START_TONE = "SOUND_START_TONE";
+export const SOUND_STOP_TONE = "SOUND_STOP_TONE";
+export const SOUND_PLAY_BEEP = "SOUND_PLAY_BEEP";
+export const SOUND_PLAY_CRASH = "SOUND_PLAY_CRASH";
 
 export const scriptCommands = [
   END,
@@ -167,7 +171,11 @@ export const scriptCommands = [
   TEXT_MULTI,
   ACTOR_SET_FRAME_TO_VALUE,
   VARIABLE_ADD_FLAGS,
-  VARIABLE_CLEAR_FLAGS
+  VARIABLE_CLEAR_FLAGS,
+  SOUND_START_TONE,
+  SOUND_STOP_TONE,
+  SOUND_PLAY_BEEP,
+  SOUND_PLAY_CRASH
 ];
 
 export const commandIndex = key => {

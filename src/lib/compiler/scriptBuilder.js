@@ -73,7 +73,11 @@ import {
   SET_INPUT_SCRIPT,
   REMOVE_INPUT_SCRIPT,
   VARIABLE_ADD_FLAGS,
-  VARIABLE_CLEAR_FLAGS
+  VARIABLE_CLEAR_FLAGS,
+  SOUND_START_TONE,
+  SOUND_STOP_TONE,
+  SOUND_PLAY_BEEP,
+  SOUND_PLAY_CRASH
 } from "../events/scriptCommands";
 import {
   getActorIndex,
@@ -721,6 +725,42 @@ class ScriptBuilder {
     const output = this.output;
     output.push(cmd(MUSIC_STOP));
   };
+
+  // Sound
+
+  soundStartTone = (period = 1600) => {
+    const output = this.output;
+
+    // start playing tone
+    output.push(cmd(SOUND_START_TONE));
+    output.push(hi(period));
+    output.push(lo(period));
+  };
+
+  soundStopTone = () => {
+    const output = this.output;
+    output.push(cmd(SOUND_STOP_TONE));
+  };
+
+  soundPlayBeep = (pitch = 4) => {
+    const output = this.output;
+
+    pitch = pitch - 1;
+    if (pitch < 0) {
+      pitch = 0;
+    }
+    if (pitch >= 8) {
+      pitch = 7;
+    }
+
+    output.push(cmd(SOUND_PLAY_BEEP));
+    output.push(pitch & 0x07);
+  }
+
+  soundPlayCrash = () => {
+    const output = this.output;
+    output.push(cmd(SOUND_PLAY_CRASH));
+  }
 
   // Data
 

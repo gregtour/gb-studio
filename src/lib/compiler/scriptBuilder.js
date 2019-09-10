@@ -77,7 +77,10 @@ import {
   SOUND_START_TONE,
   SOUND_STOP_TONE,
   SOUND_PLAY_BEEP,
-  SOUND_PLAY_CRASH
+  SOUND_PLAY_CRASH,
+  SET_TIMER_SCRIPT,
+  TIMER_RESTART,
+  TIMER_DISABLE,
 } from "../events/scriptCommands";
 import {
   getActorIndex,
@@ -795,6 +798,50 @@ class ScriptBuilder {
   scriptEnd = () => {
     const output = this.output;
     output.push(cmd(END));
+  };
+
+  // Timer Script
+
+  timerScriptSet = (duration = 10.0, script) => {
+    const output = this.output;
+    const { compileEvents, banked } = this.options;
+
+    // convert the duration from seconds to timer ticks
+    const TIMER_CYCLES = 16;
+    let durationTicks = (60 * duration / TIMER_CYCLES + 0.5) | 0;
+    if (durationTicks <= 0) {
+      durationTicks = 1;
+    }
+    if (durationTicks >= 256) {
+      durationTicks = 255;
+    }
+
+    // compile event script
+    const subScript = [];
+    if (typeof script === "function") {
+      this.output = subScript;
+      script();
+      this.output = output;
+    } else {
+      compileEvents(script, subScript, false);
+    }
+    const bankPtr = banked.push(subScript);
+
+    output.push(cmd(SET_TIMER_SCRIPT));
+    output.push(durationTicks);
+    output.push(bankPtr.bank);
+    output.push(hi(bankPtr.offset));
+    output.push(lo(bankPtr.offset));
+  };
+
+  timerRestart = () => {
+    const output = this.output;
+    output.push(cmd(TIMER_RESTART));
+  };
+
+  timerDisable = () => {
+    const output = this.output;
+    output.push(cmd(TIMER_DISABLE));
   };
 
   // Helpers

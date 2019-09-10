@@ -110,6 +110,9 @@ SCRIPT_CMD script_cmds[] = {
     {Script_SoundStopTone_b, 0},      // 0x55
     {Script_SoundPlayBeep_b, 1},      // 0x56
     {Script_SoundPlayCrash_b, 0},     // 0x57
+    {Script_SetTimerScript_b, 4},     // 0x58
+    {Script_ResetTimer_b, 0},         // 0x59
+    {Script_RemoveTimerScript_b, 0},  // 0x5A
 };
 
 UBYTE ScriptLastFnComplete();

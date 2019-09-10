@@ -160,6 +160,10 @@
   "FIELD_TONE_DURATION": "Duration in seconds",
   "FIELD_PITCH": "Pitch",
   "FIELD_SOUND_PLAY_CRASH": "Play crash symbol sound",
+  "FIELD_SET_TIMER": "Add repeating timer script",
+  "FIELD_TIMER_DURATION": "Countdown time in seconds",
+  "FIELD_TIMER_RESTART": "Restart the countdown timer",
+  "FIELD_TIMER_DISABLE": "Disable the timer script",
 
   "// 7": "Asset Viewer ---------------------------------------------",
   "ASSET_SEARCH": "Search...",
@@ -261,6 +265,9 @@
   "EVENT_SOUND_PLAY_TONE": "Sound: Play Tone",
   "EVENT_SOUND_PLAY_BEEP": "Sound: Play Beep",
   "EVENT_SOUND_PLAY_CRASH": "Sound: Play Crash",
+  "EVENT_SET_TIMER_SCRIPT": "Timer: Set timer script",
+  "EVENT_TIMER_RESTART": "Timer: Restart timer",
+  "EVENT_TIMER_DISABLE": "Timer: Disable timer script",
 
   "// 10": "Menu -----------------------------------------------------",
 

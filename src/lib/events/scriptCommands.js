@@ -86,6 +86,9 @@ export const SOUND_START_TONE = "SOUND_START_TONE";
 export const SOUND_STOP_TONE = "SOUND_STOP_TONE";
 export const SOUND_PLAY_BEEP = "SOUND_PLAY_BEEP";
 export const SOUND_PLAY_CRASH = "SOUND_PLAY_CRASH";
+export const SET_TIMER_SCRIPT = "SET_TIMER_SCRIPT";
+export const TIMER_RESTART = "TIMER_RESTART";
+export const TIMER_DISABLE = "TIMER_DISABLE";
 
 export const scriptCommands = [
   END,
@@ -175,7 +178,10 @@ export const scriptCommands = [
   SOUND_START_TONE,
   SOUND_STOP_TONE,
   SOUND_PLAY_BEEP,
-  SOUND_PLAY_CRASH
+  SOUND_PLAY_CRASH,
+  SET_TIMER_SCRIPT,
+  TIMER_RESTART,
+  TIMER_DISABLE,
 ];
 
 export const commandIndex = key => {

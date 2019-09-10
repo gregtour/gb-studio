@@ -74,6 +74,7 @@ import {
   SET_INPUT_SCRIPT,
   VARIABLE_ADD_FLAGS,
   VARIABLE_CLEAR_FLAGS,
+  TEXT_WITH_AVATAR,
   SOUND_START_TONE,
   SOUND_STOP_TONE,
   SOUND_PLAY_BEEP,
@@ -366,6 +367,16 @@ test("Should default to empty display text", () => {
   sb.textDialogue();
   expect(output).toEqual([cmd(TEXT), 0, 0]);
   expect(strings).toEqual([" "]);
+});
+
+test("Should be able to display text with avatar", () => {
+  const output = [];
+  const strings = ["First Text"];
+  const avatars = [ { id: "avatar-1" }, { id: "avatar-2" }];
+  const sb = new ScriptBuilder(output, { strings, avatars });
+  sb.textDialogue("First Text", "avatar-2");
+  expect(output).toEqual([cmd(TEXT_WITH_AVATAR), 0, 0, 1]);
+  expect(strings).toEqual(["First Text"]);
 });
 
 test("Should be able to display choice", () => {

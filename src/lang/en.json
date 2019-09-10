@@ -164,6 +164,8 @@
   "FIELD_TIMER_DURATION": "Countdown time in seconds",
   "FIELD_TIMER_RESTART": "Restart the countdown timer",
   "FIELD_TIMER_DISABLE": "Disable the timer script",
+  "FIELD_TEXT_AVATAR": "Avatar",
+  "FIELD_ADD_TEXT_AVATAR": "Add Avatar",
 
   "// 7": "Asset Viewer ---------------------------------------------",
   "ASSET_SEARCH": "Search...",
